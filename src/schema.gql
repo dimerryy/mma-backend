@@ -1,0 +1,134 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Fighter {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  nickname: String
+  age: Int!
+  weightClass: String!
+  wins: Int!
+  finishes: Int!
+  losses: Int!
+  draws: Int!
+  winStreak: Int!
+  imageUrl: String
+}
+
+type Fight {
+  id: Int!
+  event: Event!
+  fighterA: Fighter!
+  fighterB: Fighter!
+  winner: Fighter
+  method: String
+  rounds: Int
+  duration: String
+}
+
+type Event {
+  id: Int!
+  name: String
+  date: DateTime!
+  location: String
+  fights: [Fight!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Ranking {
+  id: Int!
+  fighter: Fighter!
+  weightClass: String!
+  points: Int!
+  rankPosition: Int
+}
+
+type Query {
+  getAllFighters: [Fighter!]!
+  getAllEvents: [Event!]!
+  getUpcomingEvents: [Event!]!
+  getAllFights: [Fight!]!
+  getFighterHistory(fighterId: Int!): [Fight!]!
+  getAllRankings: [Ranking!]!
+}
+
+type Mutation {
+  createFighter(data: CreateFighterInput!): Fighter!
+  updateFighter(data: UpdateFighterInput!): Fighter!
+  deleteFighter(id: Int!): Boolean!
+  createEvent(data: CreateEventInput!): Event!
+  updateEvent(data: UpdateEventInput!): Event!
+  deleteEvent(id: Int!): Boolean!
+  createFight(data: CreateFightInput!): Fight!
+  updateFight(data: UpdateFightInput!): Fight!
+  deleteFight(id: Int!): Boolean!
+}
+
+input CreateFighterInput {
+  firstName: String!
+  lastName: String!
+  nickname: String
+  age: Int!
+  weightClass: String!
+  wins: Int! = 0
+  finishes: Int! = 0
+  losses: Int! = 0
+  draws: Int! = 0
+  winStreak: Int! = 0
+  imageUrl: String
+}
+
+input UpdateFighterInput {
+  firstName: String
+  lastName: String
+  nickname: String
+  age: Int
+  weightClass: String
+  wins: Int = 0
+  finishes: Int = 0
+  losses: Int = 0
+  draws: Int = 0
+  winStreak: Int = 0
+  imageUrl: String
+  id: Int!
+}
+
+input CreateEventInput {
+  name: String!
+  date: DateTime!
+  location: String
+}
+
+input UpdateEventInput {
+  name: String
+  date: DateTime
+  location: String
+  id: Int!
+}
+
+input CreateFightInput {
+  eventId: Int!
+  fighterAId: Int!
+  fighterBId: Int!
+  winnerId: Int
+  method: String
+  rounds: Int
+  duration: String
+}
+
+input UpdateFightInput {
+  id: Int!
+  eventId: Int
+  fighterAId: Int
+  fighterBId: Int
+  winnerId: Int
+  method: String
+  rounds: Int
+  duration: String
+}
