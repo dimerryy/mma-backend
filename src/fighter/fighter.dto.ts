@@ -1,4 +1,5 @@
-import { InputType, Field, Int } from '@nestjs/graphql';
+import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+
 
 @InputType()
 export class CreateFighterInput {
@@ -21,11 +22,24 @@ export class CreateFighterInput {
   wins: number;
 
   @Field(() => Int, { defaultValue: 0 })
+  finishes: number;
+
+
+  @Field(() => Int, { defaultValue: 0 })
   losses: number;
 
   @Field(() => Int, { defaultValue: 0 })
   draws: number;
 
+  @Field(() => Int, { defaultValue: 0 })
+  winStreak: number;
+
   @Field({ nullable: true })
   imageUrl?: string;
+}
+
+@InputType()
+export class UpdateFighterInput extends PartialType(CreateFighterInput) {
+  @Field(() => Int)
+  id: number;
 }

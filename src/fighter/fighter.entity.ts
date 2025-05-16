@@ -34,11 +34,19 @@ export class Fighter {
 
   @Field(() => Int)
   @Column({ default: 0 })
+  finishes: number; 
+
+  @Field(() => Int)
+  @Column({ default: 0 })
   losses: number;
 
   @Field(() => Int)
   @Column({ default: 0 })
   draws: number;
+
+  @Field(() => Int)
+  @Column({ default: 0 })
+  winStreak: number;
 
   @Field({ nullable: true })
   @Column({ length: 255, nullable: true })
