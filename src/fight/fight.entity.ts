@@ -32,7 +32,7 @@ export class Fight {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  method?: string;
+  method?: string; // KO, Submission, Decision, etc.
 
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
@@ -40,5 +40,6 @@ export class Fight {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  duration?: string;
+  duration?: string; // e.g. "3:15"
 }
+
