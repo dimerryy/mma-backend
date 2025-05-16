@@ -141,7 +141,7 @@ src/
 
 ## 📊 ERD & Schema
 
-See [`ERD.png`](ERD.png) and [`schema.sql`](./schema.sql) (after running) for database design.
+See [`ERD.png`](ERD.png) and [`schema.sql`](./schema.gql) for database design.
 
 ---
 
@@ -162,5 +162,5 @@ You can run example queries using the GraphQL Playground at `/graphql`
 ---
 
 ## 👤 Author
-**Dimukhamed Ibadulla**  
+**Dimukhammed Ibadulla**  
 Backend Developer — 2025
