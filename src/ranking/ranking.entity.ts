@@ -26,3 +26,4 @@ export class Ranking {
   @Column({ nullable: true })
   rankPosition?: number;
 }
+
