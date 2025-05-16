@@ -29,13 +29,12 @@ export class FighterService {
 
   async update(data: UpdateFighterInput): Promise<Fighter> {
     const fighter = await this.fighterRepo.preload(data);
-    if (!fighter) throw new Error(`Fighter with ID ${data.id} not found`);
-
-    const updated = await this.fighterRepo.save(fighter);
-
-    await this.rankingCalculator.recalculateRankings(updated.weightClass);
-
-  return updated;
+    if (!fighter) {
+      throw new Error(`Fighter with ID ${data.id} not found`);
+    }
+    const savedFighter = await this.fighterRepo.save(fighter);
+    await this.rankingCalculator.recalculateRankings(savedFighter.weightClass);
+    return this.fighterRepo.save(fighter);
   }
   
   async remove(id: number): Promise<boolean> {

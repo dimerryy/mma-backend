@@ -10,7 +10,7 @@ export class Ranking {
   id: number;
 
   @Field(() => Fighter)
-  @ManyToOne(() => Fighter)
+  @ManyToOne(() => Fighter, { onDelete: 'CASCADE' }) 
   @JoinColumn({ name: 'fighter_id' })
   fighter: Fighter;
 
@@ -25,5 +25,8 @@ export class Ranking {
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   rankPosition?: number;
+
+ 
+
 }
 

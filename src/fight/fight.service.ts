@@ -6,6 +6,7 @@ import { CreateFightInput, UpdateFightInput } from './fight.dto';
 import { Fighter } from '../fighter/fighter.entity';
 import { Event } from '../event/event.entity';
 import { RankingCalculatorService } from '../shared/utils/ranking-calculator.service';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 
 
 @Injectable()
@@ -19,6 +20,17 @@ export class FightService {
   ) {}
 
   async create(data: CreateFightInput): Promise<Fight> {
+
+  if (data.fighterAId === data.fighterBId) {
+    throw new BadRequestException('Fighter A and Fighter B must be different');
+  }
+
+  const fighterA = await this.fighterRepo.findOne({ where: { id: data.fighterAId } });
+  if (!fighterA) throw new NotFoundException(`Fighter A with ID ${data.fighterAId} not found`);
+
+  const fighterB = await this.fighterRepo.findOne({ where: { id: data.fighterBId } });
+  if (!fighterB) throw new NotFoundException(`Fighter B with ID ${data.fighterBId} not found`);
+
     const fight = this.fightRepo.create({
       event: { id: data.eventId } as Event,
       fighterA: { id: data.fighterAId } as Fighter,
