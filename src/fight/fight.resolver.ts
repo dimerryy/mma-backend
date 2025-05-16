@@ -26,4 +26,9 @@ export class FightResolver {
   deleteFight(@Args('id', { type: () => Int }) id: number): Promise<boolean> {
     return this.fightService.remove(id);
   }
+
+  @Query(() => [Fight])
+  getFighterHistory(@Args('fighterId', { type: () => Int }) fighterId: number): Promise<Fight[]> {
+    return this.fightService.findByFighterId(fighterId);
+  }
 }

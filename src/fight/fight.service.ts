@@ -5,12 +5,17 @@ import { Fight } from './fight.entity';
 import { CreateFightInput, UpdateFightInput } from './fight.dto';
 import { Fighter } from '../fighter/fighter.entity';
 import { Event } from '../event/event.entity';
+import { RankingCalculatorService } from '../shared/utils/ranking-calculator.service';
+
 
 @Injectable()
 export class FightService {
   constructor(
     @InjectRepository(Fight)
     private readonly fightRepo: Repository<Fight>,
+    private readonly rankingCalculator: RankingCalculatorService,
+    @InjectRepository(Fighter) 
+    private readonly fighterRepo: Repository<Fighter>,
   ) {}
 
   async create(data: CreateFightInput): Promise<Fight> {
@@ -23,8 +28,50 @@ export class FightService {
       rounds: data.rounds,
       duration: data.duration,
     });
-    return this.fightRepo.save(fight);
+  
+    const savedFight = await this.fightRepo.save(fight);
+  
+    const winner = data.winnerId
+      ? await this.fighterRepo.findOne({ where: { id: data.winnerId } })
+      : undefined;
+  
+    const loserId =
+      data.winnerId === data.fighterAId ? data.fighterBId : data.fighterAId;
+    const loser = await this.fighterRepo.findOne({ where: { id: loserId } });
+  
+    if (winner) {
+      winner.wins += 1;
+      winner.winStreak += 1;
+  
+      if (data.method?.toLowerCase() === 'ko' || data.method?.toLowerCase() === 'submission') {
+        winner.finishes += 1;
+      }
+  
+      await this.fighterRepo.save(winner);
+    }
+  
+    if (loser) {
+      loser.losses += 1;
+      loser.winStreak = 0;
+      await this.fighterRepo.save(loser);
+    }
+  
+    if (winner?.weightClass) {
+      await this.rankingCalculator.recalculateRankings(winner.weightClass);
+    }
+  
+    const fullFight = await this.fightRepo.findOne({
+        where: { id: savedFight.id },
+        relations: ['event', 'fighterA', 'fighterB', 'winner'],
+      });
+      
+      if (!fullFight) {
+        throw new Error('Fight not found after save');
+      }
+      
+      return fullFight;
   }
+  
 
   async findAll(): Promise<Fight[]> {
     return this.fightRepo.find({
@@ -50,5 +97,15 @@ export class FightService {
   async remove(id: number): Promise<boolean> {
     const result = await this.fightRepo.delete(id);
     return (result.affected ?? 0) > 0;
+  }
+
+  async findByFighterId(fighterId: number): Promise<Fight[]> {
+    return this.fightRepo.find({
+      where: [
+        { fighterA: { id: fighterId } },
+        { fighterB: { id: fighterId } },
+      ],
+      relations: ['event', 'fighterA', 'fighterB', 'winner'],
+    });
   }
 }
