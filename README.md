@@ -1,98 +1,165 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🥋 MMA GraphQL API Backend (NestJS + PostgreSQL)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is a backend API for managing MMA fighters, events, fights, and dynamic rankings. It's built with **NestJS**, **TypeORM**, and **GraphQL**, following **CLEAN Architecture** principles.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📦 Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- CRUD for Fighters, Events, Fights, Rankings
+- Auto-updating fighter stats (wins, losses, finishes, streaks)
+- Automated ranking system with custom algorithm
+- Validations for all relations and inputs
+- GraphQL Playground with custom queries
+- PostgreSQL relational schema
 
-## Project setup
+---
 
+## 🚀 Getting Started
+
+### 1. Clone & Install
 ```bash
-$ npm install
+git clone https://github.com/dimerryy/mma-backend.git
+cd mma-backend
+npm install
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+### 2. Configure Environment
+Create a `.env` file:
+```
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=yourpassword
+DB_NAME=mma_db
 ```
 
-## Run tests
-
+### 3. Start the App
 ```bash
-# unit tests
-$ npm run test
+npm run start:dev
+```
+Visit: [http://localhost:3000/graphql](http://localhost:3000/graphql)
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
+## 🧠 GraphQL API Examples
+
+### ➕ Create Fighter
+```graphql
+mutation {
+  createFighter(data: {
+    firstName: "Jon"
+    lastName: "Jones"
+    age: 36
+    weightClass: "Light Heavyweight"
+    wins: 27
+    losses: 1
+    draws: 0
+    finishes: 10
+    winStreak: 5
+  }) {
+    id
+  }
+}
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+### 🥊 Create Fight
+```graphql
+mutation {
+  createFight(data: {
+    eventId: 1
+    fighterAId: 1
+    fighterBId: 2
+    winnerId: 1
+    method: "KO"
+    rounds: 3
+    duration: "2:45"
+  }) {
+    id
+    winner { firstName }
+  }
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 📈 Get Rankings
+```graphql
+query {
+  getAllRankings {
+    fighter { firstName }
+    points
+    rankPosition
+  }
+}
+```
 
-## Resources
+### 📅 Upcoming Events with Fight Cards
+```graphql
+query {
+  getUpcomingEvents {
+    name
+    date
+    fights {
+      fighterA { firstName }
+      fighterB { firstName }
+    }
+  }
+}
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🧮 Ranking Algorithm
 
-## Support
+Points are calculated as:
+- Win via KO/Sub = 4 pts
+- Win via Decision = 3 pts
+- Draw = 1 pt
+- Loss = 0 pts
+- Finishes (KO/Sub) +1 bonus
+- Win streak: +0.5 per win
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Tiebreakers: Win % and recent activity.
 
-## Stay in touch
+Rankings update immediately **after every fight** in the background.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## 🗂️ Project Structure
+```
+src/
+├── fighter/
+├── event/
+├── fight/
+├── ranking/
+├── shared/utils/ranking-calculator.service.ts
+└── app.module.ts
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## 📊 ERD & Schema
+
+See [`ERD.png`](ERD.png) and [`schema.sql`](./schema.sql) for database design.
+
+---
+
+## 🧪 Testing
+You can run example queries using the GraphQL Playground at `/graphql` 
+
+---
+
+## 📬 Submission Checklist
+- ✅ GraphQL CRUD (Fighter, Event, Fight, Ranking)
+- ✅ Fight stats & history
+- ✅ Upcoming events & cards
+- ✅ ERD + SQL Schema
+- ✅ Ranking algorithm auto-updates
+- ✅ Validation & error handling
+- ✅ Documented test cases
+
+---
+
+## 👤 Author
+**Dimukhamed Ibadulla**  
+Backend Developer — 2025
