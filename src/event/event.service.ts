@@ -1,4 +1,4 @@
-// src/event/event.service.ts
+import { MoreThan } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -31,4 +31,13 @@ export class EventService {
     const result = await this.eventRepo.delete(id);
     return (result.affected ?? 0) > 0;
   }
+
+async findUpcoming(): Promise<Event[]> {
+  return this.eventRepo.find({
+    where: { date: MoreThan(new Date()) },
+    relations: ['fights', 'fights.fighterA', 'fights.fighterB'],
+    order: { date: 'ASC' },
+  });
+}
+
 }

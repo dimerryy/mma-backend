@@ -1,4 +1,3 @@
-// src/event/event.resolver.ts
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { Event } from './event.entity';
 import { EventService } from './event.service';
@@ -26,5 +25,10 @@ export class EventResolver {
   @Mutation(() => Boolean)
   deleteEvent(@Args('id', { type: () => Int }) id: number): Promise<boolean> {
     return this.eventService.remove(id);
+  }
+
+  @Query(() => [Event])
+  getUpcomingEvents(): Promise<Event[]> {
+    return this.eventService.findUpcoming();
   }
 }

@@ -1,6 +1,7 @@
-// src/event/event.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { OneToMany } from 'typeorm';
+import { Fight } from '../fight/fight.entity';
 
 @ObjectType()
 @Entity('events')
@@ -9,7 +10,7 @@ export class Event {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
+  @Field({nullable: true })
   @Column({ length: 150 })
   name: string;
 
@@ -20,4 +21,8 @@ export class Event {
   @Field({ nullable: true })
   @Column({ length: 255, nullable: true })
   location?: string;
+
+  @Field(() => [Fight])
+  @OneToMany(() => Fight, fight => fight.event)
+  fights: Fight[];
 }
