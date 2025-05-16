@@ -1,3 +1,4 @@
+// src/event/event.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 
