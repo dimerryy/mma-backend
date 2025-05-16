@@ -40,7 +40,8 @@ DB_NAME=mma_db
 npm run start:dev
 ```
 Visit: [http://localhost:3000/graphql](http://localhost:3000/graphql)
-
+> ⚠️ **Important:** GraphQL Playground does **not work reliably in Safari.**  
+> Please use **Google Chrome** or any Chromium-based browser (e.g., Edge, Brave).
 ---
 
 ## 🧠 GraphQL API Examples
@@ -140,7 +141,7 @@ src/
 
 ## 📊 ERD & Schema
 
-See [`ERD.png`](ERD.png) and [`schema.sql`](./schema.sql) for database design.
+See [`ERD.png`](ERD.png) and [`schema.sql`](./schema.sql) (after running) for database design.
 
 ---
 
